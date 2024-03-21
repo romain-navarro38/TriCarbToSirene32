@@ -1,0 +1,67 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyAttributeOutsideInitInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyCompatibilityInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ourVersions">
+        <value>
+          <list size="1">
+            <item index="0" class="java.lang.String" itemvalue="3.12" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E303" />
+          <option value="E302" />
+          <option value="E203" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N803" />
+          <option value="N802" />
+          <option value="N806" />
+          <option value="N813" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="constants.DATA_DIR" />
+          <option value="PySide6.QtWidgets.returnPressed.*" />
+          <option value="PySide6.QtWidgets.clicked.connect" />
+          <option value="PySide6.QtWidgets.itemDoubleClicked.connect" />
+          <option value="PySide6.QtWidgets.currentIndexChanged.connect" />
+          <option value="PySide6.QtWidgets.textChanged.connect" />
+          <option value="PySide6.QtWidgets.cellDoubleClicked.*" />
+          <option value="PySide6.QtWidgets.itemClicked.connect" />
+          <option value="PySide6.QtCore.Signal.emit" />
+          <option value="PySide6.QtWidgets.itemSelectionChanged.connect" />
+          <option value="PySide6.QtWidgets.doubleClicked.connect" />
+          <option value="package.pnj_window.selection.connect" />
+          <option value="PySide6.QtWidgets.QPushButton.clicked" />
+          <option value="suivi_tarot.window.main_window.CustomButton.clicked" />
+          <option value="window.main_window.CustomButton.clicked" />
+          <option value="PySide6.QtWidgets.valueChanged.connect" />
+          <option value="PySide6.QtCore.currentRowChanged.connect" />
+          <option value="PySide2.QtWidgets.clicked.connect" />
+          <option value="PySide2.QtWidgets.valueChanged.connect" />
+          <option value="PySide2.QtCore.started.connect" />
+          <option value="PySide2.QtCore.finished.connect" />
+          <option value="PySide2.QtWidgets.canceled.connect" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+  </profile>
+</component>
