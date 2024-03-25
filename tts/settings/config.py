@@ -139,10 +139,16 @@ def get_code_tricarb() -> int:
     return _get_settings()["code_tricarb"]
 
 
-def get_list_protocols_maintenance() -> tuple:
+def _get_list_protocols_maintenance() -> tuple:
     """Returns the list of maintenance protocols"""
 
     return tuple(_get_settings()["protocol_maintenance"])
+
+
+def number_protocol_is_maintenance(number: int) -> bool:
+    """Checks whether a number corresponds to a maintenance protocol"""
+
+    return number in _get_list_protocols_maintenance()
 
 
 def get_feature_print_is_enabled(feature: str) -> bool:

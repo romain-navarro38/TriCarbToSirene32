@@ -1,10 +1,10 @@
 from datetime import datetime as dt
 
-import tts.settings.config as cf
+from tts.settings.config import get_code_tricarb, number_protocol_is_maintenance
 
 
 def _make_base_of_frame(protocol_setting: dict) -> str:
-    return f"{cf.get_code_tricarb()},{protocol_setting['P#']},"
+    return f"{get_code_tricarb()},{protocol_setting['P#']},"
 
 
 def _protocol_is_independent(protocol_setting: dict) -> bool:
@@ -60,5 +60,6 @@ def main_builder(result_parsed: dict) -> list:
     return (
         _build_independent_frame(base, **result_parsed)
         if _protocol_is_independent(result_parsed["protocol_setting"])
+        or number_protocol_is_maintenance(int(result_parsed["protocol_setting"]["P#"]))
         else _build_dependent_frame(base, **result_parsed)
     )
