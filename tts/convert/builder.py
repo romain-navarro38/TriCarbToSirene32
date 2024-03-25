@@ -55,7 +55,7 @@ def _date_format(date: str) -> str:
     return dt.strptime(date, "%d-%m-%y").strftime("%d/%m/%Y")
 
 
-def main_builder(result_parsed: dict) -> list:
+def builder(result_parsed: dict) -> list:
     base = _make_base_of_frame(result_parsed["protocol_setting"])
     return (
         _build_independent_frame(base, **result_parsed)

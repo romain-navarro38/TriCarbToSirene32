@@ -6,16 +6,16 @@ import tts.settings.config as cf
 
 
 def _get_type_of_frame(number_protocol: str):
-    return ("M", "extension_maintenance"
+    return (("M", "extension_maintenance")
             if cf.number_protocol_is_maintenance(int(number_protocol))
-            else "A", "extension_analysis")
+            else ("A", "extension_analysis"))
 
 
 def _make_path_rtf_file(txt_file: str) -> Path:
     return Path(cf.get_path_output_tricarb()) / txt_file.replace(".txt", ".rtf")
 
 
-def main_save(frames: list, protocol_setting: dict):
+def save(frames: list, protocol_setting: dict):
     type_frame = _get_type_of_frame(protocol_setting["P#"])
     rtf_file = _make_path_rtf_file(protocol_setting["COUNTFILE"])
     for i, frame in enumerate(frames):

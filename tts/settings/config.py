@@ -1,8 +1,10 @@
+import json.decoder
+import logging
 from json import load, dump
 from pathlib import Path
 from typing import Any, Tuple
 
-from settings.utils import SETTINGS_FILE, checks_string_is_int_between_limits, checks_string_is_dir, \
+from tts.settings.utils import SETTINGS_FILE, checks_string_is_int_between_limits, checks_string_is_dir, \
     checks_string_is_list_of_int_between_limits, checks_string_matches_boolean_choice
 
 SETTINGS = {
@@ -32,10 +34,10 @@ SETTINGS = {
                            "expected_type": "number",
                            "limit_min": 0,
                            "limit_max": 999},
-    "print_by_application": {"default": "",
+    "print_by_application": {"default": False,
                              "question": "Impression en local géré par l'application (O/N) => ",
                              "expected_type": "boolean_choice"},
-    "print_independent_protocol": {"default": "",
+    "print_independent_protocol": {"default": False,
                                    "question": "Impression multiple pour les protocoles indépendants (O/N) => ",
                                    "expected_type": "boolean_choice"}
 }
@@ -43,28 +45,32 @@ SETTINGS = {
 
 def _get_settings() -> dict:
     """Returns parameters in dictionary format"""
+    
+    try:
+        with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
+            return load(f)
+    except json.decoder.JSONDecodeError as e:
+        _reset_settings("Le fichier de paramétrage est illisible.")
+        raise ValueError("Le fichier de paramétrage est illisible.") from e
 
-    with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
-        return load(f)
 
-
-def set_settings(settings: dict) -> None:
+def _set_settings(settings: dict) -> None:
     """Saves settings in dictionary format in the settings.json file"""
 
     with open(SETTINGS_FILE, 'w', encoding='utf-8') as f:
         dump(settings, f, indent=4, ensure_ascii=False)
 
 
-def settings_file_exists() -> bool:
+def _settings_file_exists() -> bool:
     """Returns True if the settings file exists, otherwise False"""
 
     return SETTINGS_FILE.exists()
 
 
-def init_settings() -> None:
+def _init_settings() -> None:
     """Reset to default settings"""
 
-    set_settings(SETTINGS_FILE)
+    _set_settings({k: v["default"] for k, v in SETTINGS.items()})
 
 
 def _check_parameter(answer: str, question: dict) -> Tuple[bool, Any]:
@@ -82,7 +88,7 @@ def _check_parameter(answer: str, question: dict) -> Tuple[bool, Any]:
     return False, False
 
 
-def settings_is_valid() -> bool:
+def _settings_is_valid() -> bool:
     """Checks that the settings file is valid"""
 
     for setting, value in _get_settings().items():
@@ -92,7 +98,28 @@ def settings_is_valid() -> bool:
     return True
 
 
-def determine_parameters() -> dict:
+def check_settings() -> bool:
+    """Checks the settings file"""
+
+    if not _settings_file_exists():
+        _reset_settings("Fichier de configuration introuvable.")
+        raise FileNotFoundError("Fichier de configuration introuvable.")
+    elif not _settings_is_valid():
+        _reset_settings("Le fichier de configuration est incomplet ou incohérent.")
+        raise FileExistsError("Le fichier de configuration est incomplet ou incohérent.")
+    return True
+
+
+def _reset_settings(warning: str):
+    """Save errors in logging and reset to default settings"""
+
+    logging.error(warning)
+    _init_settings()
+    logging.info("Un nouveau fichier de configuration par défaut a été créé.")
+    return
+
+
+def determine_parameters() -> None:
     """Queries the user to determine the settings"""
 
     settings, value = {}, 0
@@ -101,7 +128,7 @@ def determine_parameters() -> dict:
         while not test:
             test, value = _check_parameter(input(config.get("question")), config)
         settings[parameter] = value
-    return settings
+    _set_settings(settings)
 
 
 def get_path_output_tricarb() -> Path:
@@ -121,7 +148,7 @@ def set_settings_extension(type_protocol: str, extension: int) -> None:
 
     settings = _get_settings()
     settings[type_protocol] = extension
-    set_settings(settings)
+    _set_settings(settings)
 
 
 def get_next_extension(type_protocol: str) -> str:

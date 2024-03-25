@@ -91,7 +91,7 @@ def _parse_date_time(headers: str, counts: list) -> list:
     return counts_datetime
 
 
-def main_parser() -> dict:
+def parser() -> dict:
     output_path = get_path_output_tricarb()
     protocol_setting = _get_protocol_setting(output_path)
     report_counts = _get_report(output_path, protocol_setting.get("COUNTFILE", ""))
@@ -105,8 +105,3 @@ def main_parser() -> dict:
         "protocol_setting": protocol_setting,
         "counts": counts
     }
-
-
-if __name__ == '__main__':
-    from pprint import pprint
-    pprint(main_parser())
