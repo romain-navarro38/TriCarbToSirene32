@@ -1,8 +1,9 @@
+import contextlib
+import logging
+from datetime import datetime
 from pathlib import Path
 from re import compile
 from typing import Tuple
-
-import arrow
 
 from tts.settings.config import get_path_output_tricarb
 
@@ -71,12 +72,12 @@ def _find_counts(headers: str, splitter: str, report: list, start_row: int):
     return counts
 
 
-def _parse_date(param):
-    return arrow.get(param, ["DD/MM/YYYY HH:mm:ss",
-                             "M/D/YYYY hh:mm:ss A",
-                             "MM/DD/YYYY hh:mm:ss A",
-                             "M/D/YYYY h:m:ss A",
-                             "MM/DD/YYYY h:m:ss A"])
+def _parse_text_datetime(text: str) -> datetime:
+    for fmt in {"%d/%m/%Y %H:%M:%S", "%m/%d/%Y %I:%M:%S %p"}:
+        with contextlib.suppress(ValueError):
+            return datetime.strptime(text, fmt)
+    logging.error("Date et heure d'une ligne de résultat n'est pas reconnue.")
+    raise ValueError("Date et heure d'une ligne de résultat n'est pas reconnue.")
 
 
 def _parse_date_time(headers: str, counts: list) -> list:
@@ -84,7 +85,8 @@ def _parse_date_time(headers: str, counts: list) -> list:
     counts_datetime = []
     for count in counts:
         count_datetime = count.split(",")
-        date_time = _parse_date(f"{count_datetime[headers.index('DATE')]} {count_datetime[headers.index('TIME')]}")
+        date_time = _parse_text_datetime(
+            f"{count_datetime[headers.index('DATE')]} {count_datetime[headers.index('TIME')]}")
         count_datetime[headers.index('DATE')] = date_time.strftime("%d/%m/%Y")
         count_datetime[headers.index('TIME')] = date_time.strftime("%H%M")
         counts_datetime.append(",".join(count_datetime))
